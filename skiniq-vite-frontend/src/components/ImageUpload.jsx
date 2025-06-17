@@ -1,9 +1,11 @@
 import React from 'react';
 
-const ImageUpload = ({ image, setImage }) => {
+const ImageUpload = ({ image, setImage, setFile }) => {
   const handleChange = (e) => {
     if (e.target.files[0]) {
-      setImage(URL.createObjectURL(e.target.files[0]));
+      const file = e.target.files[0];
+      setImage(URL.createObjectURL(file));
+      setFile(file);
     }
   };
 
@@ -14,5 +16,4 @@ const ImageUpload = ({ image, setImage }) => {
     </div>
   );
 };
-
 export default ImageUpload;
