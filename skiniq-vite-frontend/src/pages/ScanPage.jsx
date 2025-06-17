@@ -8,21 +8,24 @@ const ScanPage = () => {
 
   const handleScan = async () => {
     if (!image) return;
-
+  
     const formData = new FormData();
-
-    // Convert image URL (object URL) to blob before sending
-    const response = await fetch(image);
-    const blob = await response.blob();
-    formData.append("file", blob, "skin_image.jpg");
-
+    formData.append("file", image);
+  
     try {
-      const apiResponse = await fetch("https://skiniq-backend-deploy.onrender.com/", {
+      const response = await fetch("https://YOUR_BACKEND_URL/analyze-skin/", {
         method: "POST",
         body: formData,
       });
-
-      const result = await apiResponse.json();
+  
+      const result = await response.json();
+      localStorage.setItem("scanResult", JSON.stringify(result));
+      navigate("/result");
+    } catch (error) {
+      console.error("Scan failed:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
 
       // Save result to localStorage to show it on ResultPage
       localStorage.setItem("scanResult", JSON.stringify(result));
