@@ -13,7 +13,7 @@ const ScanPage = () => {
     formData.append("file", image);
 
     try {
-      const response = await fetch("https://skiniq-backend-deploy.onrender.com/", {
+      const response = await fetch("https://skiniq-backend-deploy.onrender.com/analyze-skin/", {
         method: "POST",
         body: formData,
       });
