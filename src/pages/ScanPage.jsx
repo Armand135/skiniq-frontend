@@ -15,15 +15,17 @@ const ScanPage = () => {
     try {
       const response = await fetch("https://skiniq-backend-deploy.onrender.com/", {
         method: "POST",
-        body: formData, // No need to set Content-Type; browser sets it automatically for FormData
+        body: formData,
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const result = await response.json();
 
-      // Save result to localStorage to show it on ResultPage
       localStorage.setItem("scanResult", JSON.stringify(result));
       navigate('/result');
-
     } catch (error) {
       console.error("Scan failed:", error);
       alert("Something went wrong. Please try again.");
@@ -32,8 +34,12 @@ const ScanPage = () => {
 
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Upload a Skin Image</h2>
+      <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+        Upload a Skin Image
+      </h2>
+
       <ImageUpload image={image} setImage={setImage} />
+
       <button
         onClick={handleScan}
         disabled={!image}
@@ -43,8 +49,16 @@ const ScanPage = () => {
           fontSize: '1rem',
           background: '#28a745',
           color: 'white',
-          borderRadius: '5px'
+          border: 'none',
+          borderRadius: '5px',
+          cursor: image ? 'pointer' : 'not-allowed',
+          opacity: image ? 1 : 0.6
         }}
       >
         Analyze
       </button>
+    </div>
+  );
+};
+
+export default ScanPage;
