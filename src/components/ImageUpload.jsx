@@ -1,19 +1,22 @@
 import React from 'react';
 
-const ImageUpload = ({ image, setImage, setFile }) => {
+const ImageUpload = ({ image, setImage }) => {
   const handleChange = (e) => {
-    if (e.target.files[0]) {
-      const file = e.target.files[0];
-      setImage(URL.createObjectURL(file));
-      setFile(file);
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setImage(file); // ✅ critical: this sets a real File object
+    } else {
+      alert("Please upload a valid image file.");
+      setImage(null);
     }
   };
 
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleChange} />
-      {image && <div style={{ marginTop: '1rem' }}><img src={image} alt="Skin" style={{ maxWidth: '100%', height: 'auto' }} /></div>}
+      {image && <p>Selected: {image.name}</p>}
     </div>
   );
 };
+
 export default ImageUpload;
