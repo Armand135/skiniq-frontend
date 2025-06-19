@@ -9,7 +9,7 @@ const HomePage = () => (
     </p>
     <Link to="/scan">
       <button style={{ padding: '1rem 2rem', fontSize: '1rem', background: '#007bff', color: 'white', borderRadius: '5px' }}>
-        Try Skin Scan
+        Try Skin Scanner
       </button>
     </Link>
   </div>
