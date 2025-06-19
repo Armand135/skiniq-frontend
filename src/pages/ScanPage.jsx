@@ -13,11 +13,11 @@ const ScanPage = () => {
     formData.append("file", image);
   
     try {
-      const response = await fetch("https://skiniq-backend-deploy.onrender.com/
-", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch("https://skiniq-backend-deploy.onrender.com/", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ /* your payload */ })
+});
   
       const result = await response.json();
       localStorage.setItem("scanResult", JSON.stringify(result));
