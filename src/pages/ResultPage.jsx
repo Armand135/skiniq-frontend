@@ -17,14 +17,20 @@ const ResultPage = () => {
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
       <h2>Scan Result</h2>
-      <p><strong>Predicted Class:</strong> {result.predicted_class}</p>
+      <p><strong>Predicted Condition:</strong> {result.condition}</p>
+      <p><strong>Confidence:</strong> {(result.confidence * 100).toFixed(1)}%</p>
+      <p><strong>Recommendation:</strong> {result.recommendation}</p>
 
       <h3>Explainability: Grad-CAM</h3>
-      <img
-        src={`data:image/png;base64,${result.gradcam}`}
-        alt="Grad-CAM Heatmap"
-        style={{ maxWidth: '100%', border: '1px solid #ccc', marginTop: '1rem' }}
-      />
+      {result.gradcam ? (
+        <img
+          src={`data:image/png;base64,${result.gradcam}`}
+          alt="Grad-CAM Heatmap"
+          style={{ maxWidth: '100%', border: '1px solid #ccc', marginTop: '1rem' }}
+        />
+      ) : (
+        <p>No Grad-CAM image available.</p>
+      )}
     </div>
   );
 };
