@@ -1,26 +1,32 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 const ResultPage = () => {
-  const result = JSON.parse(localStorage.getItem("scanResult"));
+  const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("scanResult");
+    if (stored) {
+      setResult(JSON.parse(stored));
+    }
+  }, []);
+
+  if (!result) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading result...</div>;
+  }
+
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Scan Result</h2>
-      {result ? (
-        <>
-          <p style={{ fontSize: '1.2rem' }}>🧠 {result.condition}</p>
-          <p>Confidence: {(result.confidence * 100).toFixed(1)}%</p>
-          <p>{result.recommendation}</p>
-        </>
-      ) : (
-        <p>No result available.</p>
-      )}
-      <Link to="/">
-        <button style={{ marginTop: '2rem', padding: '1rem 2rem', fontSize: '1rem', background: '#007bff', color: 'white', borderRadius: '5px' }}>
-          Back to Home
-        </button>
-      </Link>
+      <h2>Scan Result</h2>
+      <p><strong>Predicted Class:</strong> {result.predicted_class}</p>
+
+      <h3>Explainability: Grad-CAM</h3>
+      <img
+        src={`data:image/png;base64,${result.gradcam}`}
+        alt="Grad-CAM Heatmap"
+        style={{ maxWidth: '100%', border: '1px solid #ccc', marginTop: '1rem' }}
+      />
     </div>
   );
 };
+
 export default ResultPage;
