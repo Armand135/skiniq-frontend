@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ImageUpload from '../components/ImageUpload';
 
 const ScanPage = () => {
   const [image, setImage] = useState(null);
@@ -18,45 +17,21 @@ const ScanPage = () => {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error("Scan failed");
 
       const result = await response.json();
-
       localStorage.setItem("scanResult", JSON.stringify(result));
       navigate('/result');
-    } catch (error) {
-      console.error("Scan failed:", error);
-      alert("Something went wrong. Please try again.");
+    } catch (err) {
+      alert("Error analyzing image.");
     }
   };
 
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
-        Upload a Skin Image
-      </h2>
-
-      <ImageUpload image={image} setImage={setImage} />
-
-      <button
-        onClick={handleScan}
-        disabled={!image}
-        style={{
-          marginTop: '2rem',
-          padding: '1rem 2rem',
-          fontSize: '1rem',
-          background: '#28a745',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: image ? 'pointer' : 'not-allowed',
-          opacity: image ? 1 : 0.6
-        }}
-      >
-        Analyze
-      </button>
+    <div className="container">
+      <h2>Upload a Skin Image</h2>
+      <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+      <button className="cta-button" onClick={handleScan} disabled={!image}>Analyze</button>
     </div>
   );
 };
