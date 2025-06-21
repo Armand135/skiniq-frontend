@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const HomePage = () => {
   const [email, setEmail] = useState('');
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    // Check active session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // Subscribe to auth changes
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -10,9 +26,29 @@ const HomePage = () => {
     setEmail('');
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  };
+
   return (
     <div style={{ fontFamily: 'Calibri, sans-serif', color: '#1a3c34', backgroundColor: '#f4fbf9', padding: '2rem' }}>
-      
+
+      {/* Header with optional logout */}
+      <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
+        {session ? (
+          <button onClick={handleLogout} style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px' }}>
+            Logout
+          </button>
+        ) : (
+          <Link to="/login">
+            <button style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px' }}>
+              Login
+            </button>
+          </Link>
+        )}
+      </div>
+
       {/* Hero */}
       <section style={{ textAlign: 'center', marginBottom: '3rem' }}>
         <h1 style={{ fontSize: '3rem', marginBottom: '1rem', color: '#005f4d' }}>
