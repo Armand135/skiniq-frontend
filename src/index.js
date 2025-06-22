@@ -7,6 +7,7 @@ import ScanPage from "./pages/ScanPage";
 import ResultPage from "./pages/ResultPage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import History from "./pages/History";
 import PrivateRoute from "./components/PrivateRoute";
 import "./style.css";
 
