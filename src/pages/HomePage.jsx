@@ -4,15 +4,15 @@ import { supabase } from '../supabaseClient';
 
 const HomePage = () => {
   const [email, setEmail] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
 
-    // Subscribe to auth changes
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
@@ -26,6 +26,21 @@ const HomePage = () => {
     setEmail('');
   };
 
+  const handleInlineSignup = async (e) => {
+    e.preventDefault();
+    const { error } = await supabase.auth.signUp({
+      email: signupEmail,
+      password: signupPassword,
+    });
+    if (error) {
+      alert(`❌ Sign-up failed: ${error.message}`);
+    } else {
+      alert('✅ Sign-up successful! Please check your email to confirm your account.');
+      setSignupEmail('');
+      setSignupPassword('');
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = "/login";
@@ -33,7 +48,6 @@ const HomePage = () => {
 
   return (
     <div style={{ fontFamily: 'Calibri, sans-serif', color: '#1a3c34', backgroundColor: '#f4fbf9', padding: '2rem' }}>
-
       {/* Header with optional logout */}
       <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
         {session ? (
@@ -116,7 +130,61 @@ const HomePage = () => {
         </form>
       </section>
 
-      {/* Language Switch Placeholder */}
+      {/* Inline Sign-Up */}
+      <section style={{ textAlign: 'center', marginTop: '3rem', background: '#eefaf6', padding: '2rem', borderRadius: '10px' }}>
+        <h2 style={{ color: '#006E3C', marginBottom: '1rem' }}>Create a SkinIQ Account</h2>
+        <p style={{ fontSize: '1rem', marginBottom: '1.5rem' }}>Access your scan history, receive tailored insights, and more.</p>
+
+        <form onSubmit={handleInlineSignup} style={{ maxWidth: '400px', margin: '0 auto' }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={signupEmail}
+            onChange={(e) => setSignupEmail(e.target.value)}
+            required
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '0.6rem',
+              marginBottom: '1rem',
+              borderRadius: '6px',
+              border: '1px solid #ccc'
+            }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={signupPassword}
+            onChange={(e) => setSignupPassword(e.target.value)}
+            required
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '0.6rem',
+              marginBottom: '1rem',
+              borderRadius: '6px',
+              border: '1px solid #ccc'
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              padding: '0.7rem 1.5rem',
+              backgroundColor: '#29a388',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              width: '100%'
+            }}
+          >
+            Sign Up
+          </button>
+        </form>
+      </section>
+
+      {/* Language Switch */}
       <section style={{ textAlign: 'center', marginTop: '2rem' }}>
         <label>
           🌍 Language:
