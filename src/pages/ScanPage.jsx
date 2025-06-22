@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageUpload from '../components/ImageUpload';
+import { useEffect } from 'react';
+import { supabase } from '../supabaseClient';
+
+useEffect(() => {
+  const checkUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) navigate('/login');
+  };
+  checkUser();
+}, []);
+
 
 const ScanPage = () => {
   const [image, setImage] = useState(null);
