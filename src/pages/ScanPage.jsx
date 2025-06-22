@@ -1,22 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageUpload from '../components/ImageUpload';
-import { useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-
-useEffect(() => {
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) navigate('/login');
-  };
-  checkUser();
-}, []);
-
 
 const ScanPage = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) navigate('/login');
+    };
+    checkUser();
+  }, [navigate]);
 
   const handleScan = async () => {
     if (!image) return;
@@ -48,7 +46,7 @@ const ScanPage = () => {
     <div style={{ fontFamily: 'Segoe UI', padding: '2rem', textAlign: 'center', maxWidth: '600px', margin: 'auto' }}>
       <h1 style={{ fontSize: '2.5rem', color: '#006E3C' }}>AI-Powered Skin Scan</h1>
       <p style={{ fontSize: '1.1rem', marginBottom: '2rem', color: '#444' }}>
-        Upload a skin photo to detect potential conditions like melanoma, keratosis, or acne with instant results.
+        Upload a photo to detect possible skin conditions like melanoma or acne.
       </p>
 
       <ImageUpload image={image} setImage={setImage} />
@@ -72,7 +70,7 @@ const ScanPage = () => {
       </button>
 
       <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#777' }}>
-        📸 Tip: Ensure good lighting and close-up of the skin area.
+        📸 Tip: Ensure good lighting and a close-up of the skin area.
       </p>
     </div>
   );
