@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import ImageUpload from '../components/ImageUpload';
 import { supabase } from '../supabaseClient';
 
-const BACKEND_URL = "https://skiniq-backend-ej69.onrender.com";  // <-- no trailing slash
-
 const ScanPage = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -24,7 +22,7 @@ const ScanPage = () => {
 
     try {
       console.log("🔍 Sending scan request...");
-      const response = await fetch(`${BACKEND_URL}/analyze-skin`, {
+      const response = await fetch("https://skiniq-backend-ej69.onrender.com/analyze-skin", {
         method: "POST",
         body: formData,
       });
