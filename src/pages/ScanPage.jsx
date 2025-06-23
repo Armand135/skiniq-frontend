@@ -29,7 +29,10 @@ const ScanPage = () => {
         body: formData,
       });
 
-      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
 
       const result = await response.json();
       localStorage.setItem("scanResult", JSON.stringify(result));
